@@ -108,9 +108,9 @@ class Student {
     }
 
     fun setContacts(Phone: String? = null, Telegram: String? = null, Mail: String? = null) {
-        if (Phone != null && isValidPhone(Phone)) phone = Phone
-        if (Telegram != null && isValidTelegram(Telegram)) telegram = Telegram
-        if (Mail != null && isValidEmail(Mail)) email = Mail
+        if (Phone != null) phone = Phone
+        if (Telegram != null) telegram = Telegram
+        if (Mail != null) email = Mail
     }
 
     init {
