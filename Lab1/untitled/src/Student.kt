@@ -1,54 +1,98 @@
 package main.kotlin
 
-class Student(
-    val id: Int,
-    var lastName: String,
-    var firstName: String,
-    var middleName: String? = null,
-    var phone: String? = null,
-    var telegram: String? = null,
-    var email: String? = null,
-    var git: String? = null
-) {
-    init {
-        require(lastName.isNotBlank()) { "Фамилия должна быть указана" }
-        require(firstName.isNotBlank()) { "Имя должно быть указано" }
-
-        phone?.let { require(isValidPhone(it)) { "Неверный формат телефона" } }
-        email?.let { require(isValidEmail(it)) { "Неверный формат почты" } }
-        git?.let { require(isValidGit(it)) { "Неверный формат ссылки на Git" } }
-    }
-
-    companion object {
-        fun isValidPhone(phone: String): Boolean {
-            return phone.matches(Regex("^\\+?\\d{11}$"))
+class Student {
+    var id: Int = -1
+        set(value) {
+            if (value > 0) field = value
+        }
+        get() {
+            return field
         }
 
-        fun isValidEmail(email: String): Boolean {
-            return email.matches(Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$"))
+    var lastName: String = ""
+        set(value) {
+            if (isValidNames(value)) field = value
+            else field = ""
+        }
+        get() {
+            return field
+        }
+    var firstName: String = ""
+        set(value) {
+            if (isValidNames(value)) field = value
+            else field = ""
+        }
+        get() {
+            return field
+        }
+    var middleName: String = ""
+        set(value) {
+            if (isValidNames(value)) field = value
+            else field = ""
+        }
+        get() {
+            return field
+        }
+    var phone: String? = null
+        set(value) {
+            if (isValidPhone(value)) field = value
+        }
+        get() {
+            return field
+        }
+    var telegram: String? = null
+        set(value) {
+            if (isValidTelegram(value)) field = value
+        }
+        get() {
+            return field
+        }
+    var email: String? = null
+        set(value) {
+            if (isValidEmail(value)) field = value
+        }
+        get() {
+            return field
+        }
+    var github: String? = null
+        set(value) {
+            if (isValidGit(value)) field = value
+        }
+        get() {
+            return field
         }
 
-        fun isValidGit(git: String): Boolean {
-            return git.matches(Regex("^https://github\\.com/[a-zA-Z0-9_-]+/?\$"))
+    companion object
+    {
+        var id_student = 0
+        private fun isValidPhone(phone: String?): Boolean {
+            return phone?.matches(Regex("^\\+?\\d{11}$")) ?: true
         }
-
-        fun createStudent(vararg args: Pair<String, Any?>): Student {
-            val map = args.toMap()
-            return Student(
-                id = map["ID"] as Int,
-                lastName = map["Фамилия"] as String,
-                firstName = map["Имя"] as String,
-                middleName = map["Отчество"] as String?,
-                phone = map["Телефон"] as String?,
-                telegram = map["Телеграм"] as String?,
-                email = map["email"] as String?,
-                git = map["git"] as String?
-            )
+        private fun isValidEmail(email: String?): Boolean {
+            return email?.matches(Regex("^[a-zA-Z0-9.%_+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")) ?: true
+        }
+        private fun isValidGit(github: String?): Boolean {
+            return github?.matches(Regex("^https://github\\.com/[a-zA-Z0-9_-]+/?\$")) ?: true
+        }
+        private fun isValidNames(value: String): Boolean {
+            return value.matches(Regex("[А-Я]{1}[а-я]*"))
+        }
+        private fun isValidTelegram(value: String?): Boolean {
+            return value?.matches(Regex("""\@{1}.*""")) ?: true
         }
     }
 
     override fun toString(): String {
-        return "Студент(ID=$id, Фамилия='$lastName', Имя='$firstName', Отчество=$middleName, Телефон=$phone, Телеграм=$telegram, email=$email, git=$git)"
+        return """
+            ID: $id
+            Фамилия: $lastName
+            Имя: $firstName
+            Отчество: ${middleName}
+            Телефон: ${phone}
+            Telegram: ${telegram}
+            E-mail: ${email}
+            GitHub: ${github}
+        """.trimIndent()
     }
 
     fun validate(): Boolean {
@@ -56,16 +100,49 @@ class Student(
     }
 
     private fun hasGit(): Boolean {
-        return !git.isNullOrEmpty()
+        return !github.isNullOrEmpty()
     }
 
     private fun hasAnyContact(): Boolean {
-        return !phone.isNullOrEmpty() || !telegram.isNullOrEmpty() || !email.isNullOrEmpty()
+        return !phone.isNullOrEmpty() || !email.isNullOrEmpty() || telegram.isNullOrEmpty()
     }
 
-    fun setContacts(phone: String? = null, telegram: String? = null, email: String? = null) {
-        this.phone = phone?.takeIf { isValidPhone(it) }
-        this.telegram = telegram
-        this.email = email?.takeIf { isValidEmail(it) }
+    fun setContacts(Phone: String? = null, Telegram: String? = null, Mail: String? = null) {
+        if (Phone != null && isValidPhone(Phone)) phone = Phone
+        if (Telegram != null && isValidTelegram(Telegram)) telegram = Telegram
+        if (Mail != null && isValidEmail(Mail)) email = Mail
+    }
+
+    init {
+        id_student++
+    }
+
+    constructor(LastName:String, FirstName:String, MiddleName:String) {
+        id = id_student
+        lastName = LastName
+        firstName = FirstName
+        middleName = MiddleName
+    }
+
+    constructor(LastName: String, FirstName: String, MiddleName: String, Phone: String? = null, Telegram: String? = null, Email: String? = null, GitHub:String? = null) {
+        id = id_student
+        lastName = LastName
+        firstName = FirstName
+        middleName = MiddleName
+        phone = Phone
+        telegram = Telegram
+        email = Email
+        github = GitHub
+    }
+
+    constructor(hashStudent: HashMap<String, Any?>) {
+        id = id_student
+        lastName = hashStudent["lastname"].toString()
+        firstName = hashStudent["firstName"].toString()
+        middleName = hashStudent["middleName"].toString()
+        phone = hashStudent.getOrDefault("phone", null).toString()
+        telegram = hashStudent.getOrDefault("telegram", null).toString()
+        email = hashStudent.getOrDefault("email", null).toString()
+        github = hashStudent.getOrDefault("github", null).toString()
     }
 }
