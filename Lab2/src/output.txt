@@ -1,0 +1,16 @@
+ID: 5
+Фамилия: Спиридонов
+Имя: Данил
+Отчество: Александрович
+Телефон: 79887564587
+Telegram: @streleckiio
+E-mail: streleckiio@example.com
+GitHub: https://github.com/SoldDA
+ID: 6
+Фамилия: Иванова
+Имя: Виктория
+Отчество: Александровна
+Телефон: 12345678910
+Telegram: @kashpo
+E-mail: kashpo@mail.ru
+GitHub: null
